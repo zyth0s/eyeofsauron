@@ -1,2 +1,7 @@
 *basin
 *cube
+Makefile
+bin/
+escherpy.cpp
+input.xyz
+libescherpy.so

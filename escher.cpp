@@ -34,40 +34,6 @@
 using namespace std;
 using namespace OpenBabel;
 
-/*
-void Convert(const string infname )
-{
-  ifstream ifs(infname.c_str());
-  if(!ifs)
-  {
-    cout << "Cannot open input file" << endl;
-    return ;
-  }
-  ofstream ofs("out.gzmat");
-  if(!ofs)
-  {
-    cout << "Cannot open output file" << endl;
-    return ;
-  }
-  OpenBabel::OBConversion conv(&ifs, &ofs);
-  if(!conv.SetInAndOutFormats("XYZ","GZMAT"))
-  {
-    cout << "Formats not available" << "InputFileName" << endl;
-    return ;
-  }
-  int n = conv.Convert();
-  cout << n << " molecules converted" << endl;
-
-  OBConversion obconversion;
-  obconversion.SetInFormat("XYZ");
-  OBMol obmol;
-  obconversion.ReadFile(&obmol,"input.xyz");
-
-  MolecularRepresentation(obmol);
-
-
-}
-*/
 
 string GetFileExtension(const std::string& FileName)
 {

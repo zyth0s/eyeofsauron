@@ -34,7 +34,6 @@ int main(int argc, char **argv)
 {
   //string infname = "input.xyz";
   string infname = "aragonite.9.4-grad.cube";
-  //Convert(infname);
   Escher mol;
   mol.ReadFile(infname);
   infname = "aragonite-5.basin";

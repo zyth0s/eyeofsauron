@@ -9,8 +9,6 @@
 #ifndef __MolecularRepresentation_H_INCLUDED__   // if x.h hasn't been included yet...
 #define __MolecularRepresentation_H_INCLUDED__   //   #define this so the compiler knows it has been included
 
-void MolecularRepresentation(OpenBabel::OBMol obmol);
-void BasinsRepresentation(const std::string infname);
 
 class Representation
 {

@@ -7,7 +7,6 @@
 #ifndef __Escher_H_INCLUDED__   // if x.h hasn't been included yet...
 #define __Escher_H_INCLUDED__   //   #define this so the compiler knows it has been included
 
-//void Convert(std::string infname);
 
 class Escher  
 {
