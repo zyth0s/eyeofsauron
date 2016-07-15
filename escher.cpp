@@ -44,7 +44,7 @@ string GetFileExtension(const std::string& FileName)
 
 Escher::Escher()
 {
-    cout << "constructed Escher class" << endl;
+    //cout << "constructed Escher class" << endl;
 
 }
 
@@ -62,12 +62,22 @@ void Escher::ReadFile(const string infname)
   obconversion.SetInFormat(GetFileExtension(infname).c_str());
 
   obconversion.ReadFile(&obmol,infname);
-  std::cout << "Molecular Weight: " << obmol.GetMolWt() << std::endl;
+  cout << "Number of atoms: " << obmol.NumAtoms() << endl;
+  //std::cout << "Molecular Weight: " << obmol.GetMolWt() << std::endl;
 }
 
-void Escher::ReadBasin(const string infname) 
+void Escher::ReadBasin(const string infname, const int atnum) 
 {
-  rep.BasinsRepresentation(infname);
+  rep.BasinsRepresentation(infname, atnum);
+}
+void Escher::ReadSurf(const string infname, const int atnum, const int atomid) 
+{
+  //int atomid = 2;
+  OBAtom *atom;
+  atom = obmol.GetAtom(atomid);
+  float x[3] = {atom->GetX(),atom->GetY(),atom->GetZ()};
+  cout << "Centering: " << x[0] << " " << x[1] << " " << x[2] << endl;
+  rep.SurfRepresentation(infname, atnum, x);
 }
 
 void Escher::Show() 

@@ -18,7 +18,8 @@ class Representation
     public:
     Representation();
     void MolecularRepresentation(OpenBabel::OBMol obmol);
-    void BasinsRepresentation(const std::string infname);
+    void BasinsRepresentation(const std::string infname, const int atnum);
+    void SurfRepresentation(const std::string infname, const int atnum, const float xcenter[3]);
 };
 
 #endif // __MolecularRepresentation_H_INCLUDED__ 

@@ -15,10 +15,12 @@
  *
  * =====================================================================================
  */
+#define BOHR_TO_ANGSTROM .529177
 
 #include <string>
 using std::string;
 // Openbabel
+//#include <openbabel/obiter.h>
 #include <openbabel/mol.h>
 // VTK
 #include "vtkActor.h"
@@ -32,6 +34,9 @@ using std::string;
 #include "vtkProperty.h"
 #include "vtkRenderWindowInteractor.h"
 #include "vtkRenderWindow.h"
+#include "vtkPeriodicTable.h"
+//#include "vtkBlueObeliskData.h"
+//#include "vtkCleanPolyData.h"
 //#include "vtkRenderer.h"
 // Interatomic surfaces
 #include "vtkPoints.h"
@@ -52,6 +57,7 @@ void Representation::MolecularRepresentation(OpenBabel::OBMol obmol)
 
   vtkNew<vtkMolecule> repmol;
   repmol->Initialize();
+
   FOR_ATOMS_OF_MOL(atom, obmol)
   {
      repmol->AppendAtom(atom->GetAtomicNum(), atom->GetX(), atom->GetY(), atom->GetZ());
@@ -126,21 +132,19 @@ void Representation::MolecularRepresentation(OpenBabel::OBMol obmol)
   win->GetInteractor()->Start();
 
 }
-void Representation::BasinsRepresentation(const std::string infname)
+
+void Representation::BasinsRepresentation(const std::string infname, const int atnum)
 {
   string line;
   int no_vertices;
   cout << "Reading " << infname << endl;
   ifstream ifs(infname.c_str());
-  if(ifs.is_open())
+  for (int i=0; i<11;i++)
   {
-    for (int i=0; i<11;i++)
-    {
-        getline(ifs,line);
-    }
-    ifs >> no_vertices;
-    cout << no_vertices << endl;
+      getline(ifs,line);
   }
+  ifs >> no_vertices;
+  cout << "Number of vertices: " << no_vertices << endl;
   getline(ifs,line); // line no. 11
   getline(ifs,line); // line no. 12
   getline(ifs,line); // line no. 13
@@ -148,7 +152,7 @@ void Representation::BasinsRepresentation(const std::string infname)
   float x[3];
   vtkNew<vtkPoints> points;
   //for (vtkIdType i=1; i<no_vertices; i++)
-  for (int i=0; i<no_vertices; i++)
+  for (int zzz=0; zzz<no_vertices; zzz++)
   {
       ifs >> x[0] >> x[1] >> x[2];
       getline(ifs,line); // get the rest of line
@@ -156,7 +160,7 @@ void Representation::BasinsRepresentation(const std::string infname)
       //cout << x[0] << " " << x[1] << " " << x[2] << endl;
       
       //points->InsertPoint(i,x[3]); 
-      points->InsertPoint(i,x[0]*0.529,x[1]*0.529,x[2]*0.529); 
+      points->InsertPoint(zzz,x[0]*BOHR_TO_ANGSTROM,x[1]*BOHR_TO_ANGSTROM,x[2]*BOHR_TO_ANGSTROM); 
   }
   vtkNew<vtkPolyData> polydata;
   polydata->SetPoints(points.GetPointer());
@@ -173,12 +177,95 @@ void Representation::BasinsRepresentation(const std::string infname)
   triangulation->SetMapper(surfmap.GetPointer());
   triangulation->GetProperty()->SetOpacity(0.7);
   //triangulation->GetProperty()->SetRepresentationToWireframe();
-  //triangulation->GetProperty()->SetColor(color)
+  float rgb[3];
+  vtkNew<vtkPeriodicTable> eltable;
+  eltable->GetDefaultRGBTuple(atnum, rgb);
+  triangulation->GetProperty()->SetColor(rgb[0], rgb[1], rgb[2]);
 
   ren->AddActor(triangulation.GetPointer());
 
   ifs.close();
 }
+
+void Representation::SurfRepresentation(const std::string infname, const int atnum, const float xcenter[3])
+{
+  float rmaxsurf = 10.0;
+  float eps = 0.01;
+  string line;
+
+  cout << "Reading " << infname << endl;
+  ifstream ifs(infname.c_str());
+  int no_vertices;
+  ifs >> no_vertices;
+  cout << "Number of vertices: " << no_vertices << endl;
+  std::size_t found;
+  do { // Skip lines until beginning of data.
+      getline(ifs,line);
+      found = line.find("cos");
+
+  } while (found==string::npos);
+
+  // Read points into a vtkPoints object.
+  vtkNew<vtkPoints> points;
+  float costh, sinth, cosph, sinph, r;
+  float tmp; 
+  float x[3];
+  int i = 0; // Index # for Points in vtkPoints
+  for (int zzz=0; zzz<no_vertices; zzz++)
+  {   // Loop over all available intersections in the file
+      ifs >> costh >> sinth >> cosph >> sinph;
+      ifs >> tmp; //ifs.ignore(); discard theta weight
+      ifs >> r;
+      if (fabs(r-rmaxsurf)<eps) // Discard rmax values
+          continue;
+      else i++;                 // keep i indices.
+      getline(ifs,line);        // get the rest of line
+      //cout << i << " " << costh << " " << sinth << " " 
+      //                 << cosph << " " << sinph << " " << r << endl;
+      // Spherical to cartesian
+      x[0] = r * sinth * cosph * BOHR_TO_ANGSTROM;
+      x[1] = r * sinth * sinph * BOHR_TO_ANGSTROM;
+      x[2] = r * costh         * BOHR_TO_ANGSTROM;
+      //cout  << xcenter[0] << " " << xcenter[1] << " " << xcenter[2] << endl;
+      x[0] = x[0] + xcenter[0]; // Center around the nuclei
+      x[1] = x[1] + xcenter[1];
+      x[2] = x[2] + xcenter[2];
+      //cout  << x[0] << " " << x[1] << " " << x[2] << endl;
+      points->InsertPoint(i,x[0],x[1],x[2]); 
+  }
+
+  vtkNew<vtkPolyData> polydata;
+  polydata->SetPoints(points.GetPointer());
+
+  // Clean the polydata. This will remove duplicate points that may be
+  // present in the input data.
+  //vtkNew<vtkCleanPolyData> cleaner;
+  //cleaner->SetInputData(polydata.GetPointer());
+
+  vtkNew<vtkDelaunay3D> delny;
+  delny->SetInputData(polydata.GetPointer());
+  //delny->SetInputConnection(cleaner->GetOutputPort());
+  delny->SetTolerance(0.01);
+  delny->SetAlpha(0.0);
+  delny->BoundingTriangulationOff();
+
+  vtkNew<vtkDataSetMapper> surfmap;
+  surfmap->SetInputConnection(delny->GetOutputPort());
+
+  vtkNew<vtkActor> triangulation;
+  triangulation->SetMapper(surfmap.GetPointer());
+  triangulation->GetProperty()->SetOpacity(0.5);
+  //triangulation->GetProperty()->SetRepresentationToWireframe();
+  float rgb[3];
+  vtkNew<vtkPeriodicTable> eltable;
+  eltable->GetDefaultRGBTuple(atnum, rgb);
+  triangulation->GetProperty()->SetColor(rgb[0], rgb[1], rgb[2]);
+
+  ren->AddActor(triangulation.GetPointer());
+
+  ifs.close();
+}
+
 
 
 

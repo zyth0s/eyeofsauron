@@ -32,12 +32,16 @@ using namespace OpenBabel;
 
 int main(int argc, char **argv)
 {
+  Escher mol;
   //string infname = "input.xyz";
   string infname = "aragonite.9.4-grad.cube";
-  Escher mol;
   mol.ReadFile(infname);
+  infname = "aragonite-1.basin";
+  mol.ReadBasin(infname, 20); // Ca
   infname = "aragonite-5.basin";
-  mol.ReadBasin(infname);
+  mol.ReadBasin(infname, 6); // C
+  infname = "aragonite-9.basin";
+  mol.ReadBasin(infname, 8); // O
   mol.Show();
 
   return EXIT_SUCCESS;

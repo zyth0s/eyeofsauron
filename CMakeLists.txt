@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.0.2 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8.9 FATAL_ERROR) # dev:3.0.2
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 
-option(USE_CLANG "build application with clang" ON) 
+option(USE_CLANG "build application with clang" OFF) 
 if(USE_CLANG)
     SET (CMAKE_C_COMPILER "/usr/bin/clang")
     SET (CMAKE_C_FLAGS_INIT                "-Wall -std=c99")
@@ -27,13 +27,17 @@ endif(USE_CLANG)
 ###########################################################################
 # OpenBabel
 ###########################################################################
+set(OPENBABEL2_INCLUDE_DIR /home/daniel/pkg/openbabel-2.3.2-uovi/install/include/openbabel-2.0/)
+set(OPENBABEL2_LIBRARIES /home/daniel/pkg/openbabel-2.3.2-uovi/install/lib/libopenbabel.so)
+set(OPENBABEL2_VERSION_MET TRUE)
 find_package(OpenBabel2 REQUIRED)
 include_directories(${OPENBABEL2_INCLUDE_DIR})
 
 ###########################################################################
 # VTK
 ###########################################################################
-set(VTK_RENDERING_BACKEND "OpenGL2")
+#set(VTK_RENDERING_BACKEND "OpenGL2") # VTK compiled with OpenGL2 (faster)
+set(VTK_RENDERING_BACKEND "OpenGL")
 if(NOT VTK_BINARY_DIR)
     find_package(VTK 7.0 REQUIRED COMPONENTS
       #  find_package(VTK 7.0 COMPONENTS
@@ -56,7 +60,7 @@ endif()
 ###########################################################################
 # Boost
 ###########################################################################
-FIND_PACKAGE(Boost 1.55)
+FIND_PACKAGE(Boost 1.49) # dev: 1.55
 IF(Boost_FOUND)
   INCLUDE_DIRECTORIES("${Boost_INCLUDE_DIRS}" "/usr/include/python2.7")
   SET(Boost_USE_STATIC_LIBS OFF)
@@ -76,8 +80,8 @@ IF(Boost_FOUND)
       include/escher.hpp 
       representation.cpp 
       escher.cpp
+      promoldenformat.cpp
   )
-  
   
   # A python module for scripting.
   add_library(escherpy SHARED ${SOURCES} pymodule.cpp)

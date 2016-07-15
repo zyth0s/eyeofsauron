@@ -33,6 +33,7 @@ BOOST_PYTHON_MODULE(libescherpy)
     class_<Escher,boost::noncopyable>("Escher")
         .def("ReadFile", & Escher::ReadFile)
         .def("ReadBasin", & Escher::ReadBasin)
+        .def("ReadSurf", & Escher::ReadSurf)
         .def("Show", & Escher::Show)
     ;
 }

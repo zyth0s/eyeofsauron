@@ -13,7 +13,6 @@
 ###################################################
 # With CMake
 ###################################################
-rm out.gzmat
 rm bin/main
 rm libescherpy.so
 cmake -DVTK_DIR:PATH=/home/daniel/pkg/vis/VTK-7.0.0/build .
@@ -21,5 +20,5 @@ make -j 4 #VERBOSE=1
 rm -Rf CMakeCache.txt cmake_install.cmake CMakeFiles
 echo "----------------------------------------------------------------------------------"
 echo "----------------------------------------------------------------------------------"
-./bin/main input.xyz out.gzmat
+#./bin/main input.xyz out.gzmat
 

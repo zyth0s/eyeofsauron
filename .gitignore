@@ -5,3 +5,5 @@ bin/
 escherpy.cpp
 input.xyz
 libescherpy.so
+
+surf*

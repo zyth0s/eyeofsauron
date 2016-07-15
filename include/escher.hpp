@@ -18,7 +18,8 @@ class Escher
     Escher();
     //~Escher();
     void ReadFile(const std::string infname) ;
-    void ReadBasin(const std::string infname) ;
+    void ReadBasin(const std::string infname, const int atnum) ;
+    void ReadSurf(const std::string infname, const int atnum, const int atomid) ;
     void Show() ;
 };
 
