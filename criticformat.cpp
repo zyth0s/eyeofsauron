@@ -29,6 +29,8 @@ they are derived from OBBase, such as OBReaction, OBText.
 
 */
 
+#define BOHR_TO_ANGSTROM .529177
+
 #include <openbabel/babelconfig.h>
 #include <openbabel/obmolecformat.h>
 
@@ -36,17 +38,17 @@ using namespace std;
 namespace OpenBabel
 {
 
-class PMDFormat : public OBMoleculeFormat
+class CRITICFormat : public OBMoleculeFormat
 // Derive directly from OBFormat for objects which are not molecules.
 {
 public:
 	//Register this format type ID in the constructor
-  PMDFormat()
+  CRITICFormat()
 	{
-		/* PMD is the Promolden file extension and is case insensitive. A MIME type can be
+		/* CRITIC is the CRITIC2 file extension and is case insensitive. A MIME type can be
 		   added as an optional third parameter.
 		   Multiple file extensions can be registered by adding extra statements.*/
-		OBConversion::RegisterFormat("PMD",this);
+		OBConversion::RegisterFormat("CRITIC",this);
 
 		/* If there are any format specific options they should be registered here
 		   so that the commandline interface works properly.
@@ -92,8 +94,8 @@ public:
 	virtual const char* Description() //required
 	{
 		return
-		"PMD (Promolden) output format\n"
-		"The PMD chemical file format contains an atoms-in-molecules analysis.\n"
+		"CRITIC (Critic2) output format\n"
+		"The CRITIC chemical file format contains an atoms-in-molecules analysis.\n"
                 "No formal specification has been published\n"
                 "Read Options e.g. -as\n"
                 "  s  Output single bonds only\n"
@@ -107,7 +109,7 @@ public:
 
   //Optional
 	virtual const char* GetMIMEType()
-  { return "chemical/x-promolden"; };
+  { return "chemical/x-critic"; };
 
 
   /* Flags() can return be any of the following combined by |
@@ -140,11 +142,11 @@ private:
 	////////////////////////////////////////////////////
 
 //Make an instance of the format class
-PMDFormat thePMDFormat;
+CRITICFormat theCRITICFormat;
 
 /////////////////////////////////////////////////////////////////
 
-bool PMDFormat::ReadMolecule(OBBase* pOb, OBConversion* pConv)
+bool CRITICFormat::ReadMolecule(OBBase* pOb, OBConversion* pConv)
 {
   OBMol* pmol = pOb->CastAndClear<OBMol>();
   if(pmol==NULL)
@@ -170,8 +172,7 @@ bool PMDFormat::ReadMolecule(OBBase* pOb, OBConversion* pConv)
   std::size_t found;
   do { // Skip lines until beginning of data.
       getline(ifs,line);
-      found = line.find("Number of Centers:");
-
+      found = line.find("Number of atoms in the unit cell:");
   } while (found==string::npos);
   string tmpstring;
   tmpstring = line.substr(line.find_last_of(":")+1);
@@ -179,19 +180,17 @@ bool PMDFormat::ReadMolecule(OBBase* pOb, OBConversion* pConv)
   mol.ReserveAtoms(natoms);
   do { // Skip lines until beginning of data.
       getline(ifs,line);
-      found = line.find("Cartesian coordinates of centers:");
-
+      found = line.find("List of atoms in the unit cell (bohr):");
   } while (found==string::npos);
-  getline(ifs,line); // skip blank line
 
-    // The next lines contain five items each, separated by white
+    // The next lines contain four items each, separated by white
     // spaces: the atom index, the atom type, and the coordinates of the atom
     vector<string> vs;
     for (unsigned int i = 1; i <= natoms; i ++)
       {
         if (!ifs.getline(buffer,BUFF_SIZE))
           {
-            errorMsg << "Problems reading a PMD file: "
+            errorMsg << "Problems reading a CRITIC file: "
                      << " According to Number of Centers, there should be " << natoms
                      << " atoms, and therefore " << natoms << " coordinates in the file.";
 
@@ -199,12 +198,12 @@ bool PMDFormat::ReadMolecule(OBBase* pOb, OBConversion* pConv)
             return(false);
           }
         tokenize(vs,buffer);
-        if (vs.size() < 5) // ignore extra columns which some applications add
+        if (vs.size() < 4) // ignore extra columns which some applications add
           {
             errorMsg << "Problems reading an XYZ file: "
                      << "Could not read coordinates line #" << i << "." << endl
                      << "OpenBabel found the line '" << buffer << "'" << endl
-                     << "According to the specifications, this line should contain exactly 5 entries, separated by white space." << endl
+                     << "According to the specifications, this line should contain exactly 4 entries, separated by white space." << endl
                      << "However, OpenBabel found " << vs.size() << " items.";
 
             obErrorLog.ThrowError(__FUNCTION__, errorMsg.str() , obWarning);
@@ -216,58 +215,59 @@ bool PMDFormat::ReadMolecule(OBBase* pOb, OBConversion* pConv)
         // sense, set the atomic number and leave the atomic type open
         // (the type is then later faulted in when atom->GetType() is
         // called). If the entry does not make sense to use, set the atom
-        // type manually, assuming that the author of the pmd-file had
+        // type manually, assuming that the author of the critic-file had
         // something "special" in mind.
         OBAtom *atom  = mol.NewAtom();
 
-        int atomicNum = etab.GetAtomicNum(vs[1].c_str());
-        //set atomic number, or '0' if the atom type is not recognized
-        if (atomicNum == 0) {
-          // i.e., the first column is the atomic number, not a symbol
-          // so we'll first check if we can convert this to an element number
-          atomicNum = atoi(vs[1].c_str());
-        }
-
-        atom->SetAtomicNum(atomicNum);
-        if (atomicNum == 0) // still strange, try using an atom type
-          atom->SetType(vs[1]);
-
         // Read the atom coordinates
         char *endptr;
-        double x = strtod((char*)vs[2].c_str(),&endptr);
+        double x = strtod((char*)vs[0].c_str(),&endptr) * BOHR_TO_ANGSTROM;
+        if (endptr == (char*)vs[0].c_str())
+          {
+            errorMsg << "Problems reading an CRITIC file: "
+                     << "OpenBabel found the line '" << buffer << "'" << endl
+                     << "According to the specifications, this line should contain exactly 4 entries, separated by white space." << endl
+                     << "OpenBabel could not interpret item #0 as a number.";
+
+            obErrorLog.ThrowError(__FUNCTION__, errorMsg.str() , obWarning);
+            return(false);
+          }
+        double y = strtod((char*)vs[1].c_str(),&endptr) * BOHR_TO_ANGSTROM;
+        if (endptr == (char*)vs[1].c_str())
+          {
+            errorMsg << "Problems reading an XYZ file: "
+                     << "OpenBabel found the line '" << buffer << "'" << endl
+                     << "According to the specifications, this line should contain exactly 4 entries, separated by white space." << endl
+                     << "OpenBabel could not interpret item #1 as a number.";
+
+            obErrorLog.ThrowError(__FUNCTION__, errorMsg.str() , obWarning);
+            return(false);
+          }
+        double z = strtod((char*)vs[2].c_str(),&endptr) * BOHR_TO_ANGSTROM;
         if (endptr == (char*)vs[2].c_str())
           {
-            errorMsg << "Problems reading an PMD file: "
+            errorMsg << "Problems reading an XYZ file: "
                      << "OpenBabel found the line '" << buffer << "'" << endl
-                     << "According to the specifications, this line should contain exactly 5 entries, separated by white space." << endl
+                     << "According to the specifications, this line should contain exactly 4 entries, separated by white space." << endl
                      << "OpenBabel could not interpret item #2 as a number.";
 
             obErrorLog.ThrowError(__FUNCTION__, errorMsg.str() , obWarning);
             return(false);
           }
-        double y = strtod((char*)vs[3].c_str(),&endptr);
-        if (endptr == (char*)vs[3].c_str())
-          {
-            errorMsg << "Problems reading an XYZ file: "
-                     << "OpenBabel found the line '" << buffer << "'" << endl
-                     << "According to the specifications, this line should contain exactly 5 entries, separated by white space." << endl
-                     << "OpenBabel could not interpret item #3 as a number.";
-
-            obErrorLog.ThrowError(__FUNCTION__, errorMsg.str() , obWarning);
-            return(false);
-          }
-        double z = strtod((char*)vs[4].c_str(),&endptr);
-        if (endptr == (char*)vs[4].c_str())
-          {
-            errorMsg << "Problems reading an XYZ file: "
-                     << "OpenBabel found the line '" << buffer << "'" << endl
-                     << "According to the specifications, this line should contain exactly 5 entries, separated by white space." << endl
-                     << "OpenBabel could not interpret item #3 as a number.";
-
-            obErrorLog.ThrowError(__FUNCTION__, errorMsg.str() , obWarning);
-            return(false);
-          }
         atom->SetVector(x,y,z); //set coordinates
+
+        int atomicNum = etab.GetAtomicNum(vs[3].c_str());
+        //set atomic number, or '0' if the atom type is not recognized
+        if (atomicNum == 0) {
+          // i.e., the last column is the atomic number, not a symbol
+          // so we'll first check if we can convert this to an element number
+          atomicNum = atoi(vs[3].c_str());
+        }
+
+        atom->SetAtomicNum(atomicNum);
+        if (atomicNum == 0) // still strange, try using an atom type
+          atom->SetType(vs[3]);
+
       }
 
 
@@ -303,12 +303,12 @@ bool PMDFormat::ReadMolecule(OBBase* pOb, OBConversion* pConv)
 	   it is necessary to leave the input stream at the beginning of next object when
 	   returning false;*/
 	return true;
-}
+} 
+
 
 ////////////////////////////////////////////////////////////////
 
-// There is no Promolden input with molecular information.
+// There is no Critic2 input with molecular information.
 // The info is taken from the output of other codes.
 
 } //namespace OpenBabel
-

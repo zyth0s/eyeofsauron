@@ -27,7 +27,7 @@ Requirements:
   3. Add the names of the files to `openbabel-*/src/formats/CMakeLists.txt`.
   4. Compile and install (cmake [install dir] ; make; install)
 
-Debian 6-8
+Debian 7-8
 -----------
 
 * Cmake: `sudo aptitude/apt-get install cmake`
@@ -60,4 +60,4 @@ License:
 Eye Of Sauron is distributed under the GPLv3 License.
 See [LICENSE.txt][] for details.
 
-[Copyright.txt]: LICENSE.txt
+[LICENSE.txt]: LICENSE.txt
