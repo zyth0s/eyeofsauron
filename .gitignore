@@ -2,10 +2,8 @@
 *cube
 *so
 *.pyc
-Makefile
-bin/
-escherpy.cpp
-input.xyz
-libescherpy.so
 
-surf*
+Makefile
+
+bin/
+test/
