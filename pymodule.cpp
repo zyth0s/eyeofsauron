@@ -24,8 +24,10 @@
 #include <boost/python/module.hpp>
 #include <boost/python/def.hpp>
 #include <boost/python/class.hpp>
+#include <boost/python/overloads.hpp>
 using namespace boost::python;
 
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(ReadFile_overloads, ReadFile, 1, 2)
 
 BOOST_PYTHON_MODULE(libeyeos)
 {
@@ -33,9 +35,9 @@ BOOST_PYTHON_MODULE(libeyeos)
 
     //class_<EyeOfSauron>("EyeOfSauron", init<std::string>())
     class_<EyeOfSauron,boost::noncopyable>("EyeOfSauron")
-        .def("ReadFile", & EyeOfSauron::ReadFile)
+        .def("ReadFile", & EyeOfSauron::ReadFile, ReadFile_overloads())
         .def("ReadBasin", & EyeOfSauron::ReadBasin)
         .def("ReadSurf", & EyeOfSauron::ReadSurf)
-        .def("Show", & EyeOfSauron::Show)
+        .def("SeeAll", & EyeOfSauron::SeeAll)
     ;
 }

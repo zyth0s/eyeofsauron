@@ -17,10 +17,10 @@ class EyeOfSauron
     OpenBabel::OBMol obmol;
     EyeOfSauron();
     //~EyeOfSauron();
-    void ReadFile(const std::string infname) ;
+    void ReadFile(const std::string infname, std::string informat = "") ;
     void ReadBasin(const std::string infname, const int atnum) ;
     void ReadSurf(const std::string infname, const int atnum, const int atomid) ;
-    void Show() ;
+    void SeeAll() ;
 };
 
 #endif // __EyeOfSauron_H_INCLUDED__ 

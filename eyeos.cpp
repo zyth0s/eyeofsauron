@@ -48,7 +48,7 @@ EyeOfSauron::EyeOfSauron()
 
 }
 
-void EyeOfSauron::ReadFile(const string infname) 
+void EyeOfSauron::ReadFile(const string infname, string informat) 
 {
   cout << "Reading " << infname << endl;
   ifstream ifs(infname.c_str());
@@ -59,7 +59,10 @@ void EyeOfSauron::ReadFile(const string infname)
   }
 
   OBConversion obconversion;
-  obconversion.SetInFormat(GetFileExtension(infname).c_str());
+  if (informat.empty())
+      informat = GetFileExtension(infname);
+  //cout << informat << endl;
+  obconversion.SetInFormat(informat.c_str());
 
   obconversion.ReadFile(&obmol,infname);
   cout << "Number of atoms: " << obmol.NumAtoms() << endl;
@@ -80,7 +83,7 @@ void EyeOfSauron::ReadSurf(const string infname, const int atnum, const int atom
   rep.SurfRepresentation(infname, atnum, x);
 }
 
-void EyeOfSauron::Show() 
+void EyeOfSauron::SeeAll() 
 {
   rep.MolecularRepresentation(obmol);
 }

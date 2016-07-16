@@ -38,7 +38,7 @@ int main(int argc, char **argv)
   eyeos.ReadBasin(infname, 6); // C
   infname = "test/aragonite-9.basin";
   eyeos.ReadBasin(infname, 8); // O
-  eyeos.Show();
+  eyeos.SeeAll();
 
   return EXIT_SUCCESS;
 
