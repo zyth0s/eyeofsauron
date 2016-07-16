@@ -19,20 +19,16 @@
  * =====================================================================================
  */
 
-
-
 #include <iostream>
-// Escher
-#include "include/escher.hpp"
+// EyeOfSauron
+#include "include/eyeos.hpp"
 
 using namespace std;
 using namespace OpenBabel;
 
-
-
 int main(int argc, char **argv)
 {
-  Escher mol;
+  EyeOfSauron mol;
   //string infname = "input.xyz";
   string infname = "aragonite.9.4-grad.cube";
   mol.ReadFile(infname);

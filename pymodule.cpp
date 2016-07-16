@@ -3,7 +3,7 @@
  *
  *       Filename:  pymodule.cpp
  *
- *    Description:  Python API for the Escher C++ library
+ *    Description:  Python API for the EyeOfSauron C++ library
  *
  *        Version:  1.0
  *        Created:  07/05/16 18:00:19
@@ -18,22 +18,24 @@
 
 //#include <string>
 
-#include "include/escher.hpp"
+// EyeOfSauron
+#include "include/eyeos.hpp"
 
 #include <boost/python/module.hpp>
 #include <boost/python/def.hpp>
 #include <boost/python/class.hpp>
 using namespace boost::python;
 
-BOOST_PYTHON_MODULE(libescherpy)
+
+BOOST_PYTHON_MODULE(libeyeos)
 {
     //def("Convert", Convert);
 
-    //class_<Escher>("Escher", init<std::string>())
-    class_<Escher,boost::noncopyable>("Escher")
-        .def("ReadFile", & Escher::ReadFile)
-        .def("ReadBasin", & Escher::ReadBasin)
-        .def("ReadSurf", & Escher::ReadSurf)
-        .def("Show", & Escher::Show)
+    //class_<EyeOfSauron>("EyeOfSauron", init<std::string>())
+    class_<EyeOfSauron,boost::noncopyable>("EyeOfSauron")
+        .def("ReadFile", & EyeOfSauron::ReadFile)
+        .def("ReadBasin", & EyeOfSauron::ReadBasin)
+        .def("ReadSurf", & EyeOfSauron::ReadSurf)
+        .def("Show", & EyeOfSauron::Show)
     ;
 }

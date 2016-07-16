@@ -1,7 +1,7 @@
 /*
  * =====================================================================================
  *
- *       Filename:  escher.cpp
+ *       Filename:  eyeos.cpp
  *
  *    Description:  A molecular visualizer for QTAIM/IQA and 
  *                  emergent scalar fields topology.
@@ -27,9 +27,9 @@
 #include <openbabel/obconversion.h>
 #include <openbabel/internalcoord.h>
 //#include <openbabel/mol.h>
-// Escher
+// EyeOfSauron
 #include "include/representation.hpp"
-#include "include/escher.hpp"
+#include "include/eyeos.hpp"
 
 using namespace std;
 using namespace OpenBabel;
@@ -42,13 +42,13 @@ string GetFileExtension(const std::string& FileName)
     return "";
 }
 
-Escher::Escher()
+EyeOfSauron::EyeOfSauron()
 {
-    //cout << "constructed Escher class" << endl;
+    //cout << "constructed EyeOfSauron class" << endl;
 
 }
 
-void Escher::ReadFile(const string infname) 
+void EyeOfSauron::ReadFile(const string infname) 
 {
   cout << "Reading " << infname << endl;
   ifstream ifs(infname.c_str());
@@ -66,11 +66,11 @@ void Escher::ReadFile(const string infname)
   //std::cout << "Molecular Weight: " << obmol.GetMolWt() << std::endl;
 }
 
-void Escher::ReadBasin(const string infname, const int atnum) 
+void EyeOfSauron::ReadBasin(const string infname, const int atnum) 
 {
   rep.BasinsRepresentation(infname, atnum);
 }
-void Escher::ReadSurf(const string infname, const int atnum, const int atomid) 
+void EyeOfSauron::ReadSurf(const string infname, const int atnum, const int atomid) 
 {
   //int atomid = 2;
   OBAtom *atom;
@@ -80,15 +80,15 @@ void Escher::ReadSurf(const string infname, const int atnum, const int atomid)
   rep.SurfRepresentation(infname, atnum, x);
 }
 
-void Escher::Show() 
+void EyeOfSauron::Show() 
 {
   rep.MolecularRepresentation(obmol);
 }
 
 /*
-Escher::~Escher()
+EyeOfSauron::~EyeOfSauron()
 {
-    cout << "destructed Escher class" << endl;
+    cout << "destructed EyeOfSauron class" << endl;
 
 }
 */

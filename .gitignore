@@ -1,5 +1,7 @@
 *basin
 *cube
+*so
+*.pyc
 Makefile
 bin/
 escherpy.cpp

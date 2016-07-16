@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8.9 FATAL_ERROR) # dev:3.0.2
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
+set(LIBRARY_OUTPUT_PATH    ${CMAKE_BINARY_DIR}/lib)
 
 option(USE_CLANG "build application with clang" OFF) 
 if(USE_CLANG)
@@ -81,14 +82,14 @@ IF(Boost_FOUND)
 
   set(SOURCES 
       include/representation.hpp 
-      include/escher.hpp 
+      include/eyeos.hpp 
       representation.cpp 
-      escher.cpp
+      eyeos.cpp
   )
   
   # A python module for scripting.
-  add_library(escherpy SHARED ${SOURCES} pymodule.cpp)
-  target_link_libraries(escherpy ${OPENBABEL2_LIBRARIES} ${VTK_LIBRARIES} ${Boost_LIBRARIES})
+  add_library(eyeos SHARED ${SOURCES} pymodule.cpp)
+  target_link_libraries(eyeos ${OPENBABEL2_LIBRARIES} ${VTK_LIBRARIES} ${Boost_LIBRARIES})
 
 ENDIF()
 
