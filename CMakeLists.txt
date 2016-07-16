@@ -84,7 +84,6 @@ IF(Boost_FOUND)
       include/escher.hpp 
       representation.cpp 
       escher.cpp
-      promoldenformat.cpp
   )
   
   # A python module for scripting.
