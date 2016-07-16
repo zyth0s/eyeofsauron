@@ -33,6 +33,14 @@ Installation:
 There is a `compile.sh` script already designed for the compiling process.
 The `script.py` shows how to access the library from python.
 
+Bugs:
+=====
+
+* Axes are not shown with the OpenGL v1 renderer.
+
+* The triangulation of interbasin surfaces often fails and several warnings
+  appear. Just rerun the program. This usually works.
+
 License:
 ========
 
