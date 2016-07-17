@@ -28,10 +28,16 @@ endif(USE_CLANG)
 ###########################################################################
 # OpenBabel
 ###########################################################################
+# Release
 set(OPENBABEL2_INCLUDE_DIR /home/daniel/pkg/openbabel-2.3.2-uovi/install/include/openbabel-2.0/)
 set(OPENBABEL2_LIBRARIES /home/daniel/pkg/openbabel-2.3.2-uovi/install/lib/libopenbabel.so)
+
+# Git
+#set(OPENBABEL2_INCLUDE_DIR /home/daniel/git/openbabel/build/install/include/openbabel-2.0/)
+#set(OPENBABEL2_LIBRARIES /home/daniel/git/openbabel/build/install/lib/libopenbabel.so)
+
 set(OPENBABEL2_VERSION_MET TRUE)
-find_package(OpenBabel2 REQUIRED)
+#find_package(OpenBabel2 REQUIRED)
 include_directories(${OPENBABEL2_INCLUDE_DIR})
 
 ###########################################################################

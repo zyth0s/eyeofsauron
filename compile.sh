@@ -14,7 +14,7 @@
 # With CMake
 ###################################################
 rm bin/main
-rm lib/libeeyeos.so
+rm lib/libeyeos.so
 cmake -DVTK_DIR:PATH=/home/daniel/pkg/vis/VTK-7.0.0/build .
 make -j 4 #VERBOSE=1
 rm -Rf CMakeCache.txt cmake_install.cmake CMakeFiles

@@ -26,6 +26,7 @@
 // Openbabel
 #include <openbabel/obconversion.h>
 #include <openbabel/internalcoord.h>
+#include <openbabel/generic.h>
 //#include <openbabel/mol.h>
 // EyeOfSauron
 #include "include/representation.hpp"
@@ -65,6 +66,11 @@ void EyeOfSauron::ReadFile(const string infname, string informat)
   obconversion.SetInFormat(informat.c_str());
 
   obconversion.ReadFile(&obmol,infname);
+  if (obmol.HasData(OBGenericDataType::UnitCell))
+  {
+      OBUnitCell* cell = (OBUnitCell*) obmol.GetData(OBGenericDataType::UnitCell);
+      cout << "Alpha: " << cell->GetAlpha() << endl;
+  }
   cout << "Number of atoms: " << obmol.NumAtoms() << endl;
   //std::cout << "Molecular Weight: " << obmol.GetMolWt() << std::endl;
 }

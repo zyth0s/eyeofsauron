@@ -164,21 +164,49 @@ bool CRITICFormat::ReadMolecule(OBBase* pOb, OBConversion* pConv)
   unsigned int natoms;	
   char buffer[BUFF_SIZE];
   string line;
+  OBUnitCell *cell = new OBUnitCell();
 
   stringstream errorMsg;
 
   if (!ifs)
     return false; // we're attempting to read past the end of the file
+
   std::size_t found;
-  do { // Skip lines until beginning of data.
+  float Alpha, Beta, Gamma, A, B, C;
+  string tmpstring;
+
+  do { // Skip lines until cell lenghts
+      getline(ifs,line);
+      found = line.find("Lattice parameters (ang):");
+  } while (found==string::npos);
+  tmpstring = line.substr(line.find_last_of(":")+1);
+  istringstream ( tmpstring ) >> A;
+  istringstream ( tmpstring ) >> B;
+  istringstream ( tmpstring ) >> C;
+
+  do { // Skip lines until cell angles
+      getline(ifs,line);
+      found = line.find("Lattice angles (degrees):");
+  } while (found==string::npos);
+  tmpstring = line.substr(line.find_last_of(":")+1);
+  istringstream ( tmpstring ) >> Alpha;
+  istringstream ( tmpstring ) >> Beta;
+  istringstream ( tmpstring ) >> Gamma;
+
+  // Build unit cell
+  cell->SetData( A, B, C, Alpha, Beta, Gamma );
+  mol.SetData(cell);
+
+
+  do { // Skip lines until number of atoms
       getline(ifs,line);
       found = line.find("Number of atoms in the unit cell:");
   } while (found==string::npos);
-  string tmpstring;
   tmpstring = line.substr(line.find_last_of(":")+1);
   istringstream ( tmpstring ) >> natoms;
   mol.ReserveAtoms(natoms);
-  do { // Skip lines until beginning of data.
+
+  do { // Skip lines until beginning of coordinates.
       getline(ifs,line);
       found = line.find("List of atoms in the unit cell (bohr):");
   } while (found==string::npos);
