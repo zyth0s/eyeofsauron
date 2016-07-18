@@ -285,8 +285,64 @@ bool PMDFormat::ReadMolecule(OBBase* pOb, OBConversion* pConv)
           kineticE->SetValue( vs[2]);
           mol.SetData(kineticE);
         }
+        if (strstr(buffer, "     POTENTIAL         =")) 
+        { // Promolden reconstructed potential energy
+          tokenize(vs, buffer);
+          OBPairData *potentialE = new OBPairData();
+          potentialE->SetAttribute("potential energy");
+          potentialE->SetValue( vs[2]);
+          mol.SetData(potentialE);
+        }
+        if (strstr(buffer, "     NUC-NUC           =")) 
+        { // Promolden reconstructed nuclear-nuclear energy
+          tokenize(vs, buffer);
+          OBPairData *nucNucE = new OBPairData();
+          nucNucE->SetAttribute("nuc-nuc energy");
+          nucNucE->SetValue( vs[2]);
+          mol.SetData(nucNucE);
+        }
+        if (strstr(buffer, "     NUC-EL            =")) 
+        { // Promolden reconstructed nuclear-electron energy
+          tokenize(vs, buffer);
+          OBPairData *nucElE = new OBPairData();
+          nucElE->SetAttribute("nuc-el energy");
+          nucElE->SetValue( vs[2]);
+          mol.SetData(nucElE);
+        }
+        if (strstr(buffer, "     EL-EL             =")) 
+        { // Promolden reconstructed electron-electron energy
+          tokenize(vs, buffer);
+          OBPairData *elElE = new OBPairData();
+          elElE->SetAttribute("el-el energy");
+          elElE->SetValue( vs[2]);
+          mol.SetData(elElE);
+        }
+        if (strstr(buffer, "      2T+V              =")) 
+        { // Promolden reconstructed virial energy
+          tokenize(vs, buffer);
+          OBPairData *virialE = new OBPairData();
+          virialE->SetAttribute("virial energy");
+          virialE->SetValue( vs[2]);
+          mol.SetData(virialE);
+        }
+        if (strstr(buffer, "      ENET              =")) 
+        { // Promolden reconstructed net energy
+          tokenize(vs, buffer);
+          OBPairData *netE = new OBPairData();
+          netE->SetAttribute("net energy");
+          netE->SetValue( vs[2]);
+          mol.SetData(netE);
+        }
+        if (strstr(buffer, "      EINT              =")) 
+        { // Promolden reconstructed interaction energy
+          tokenize(vs, buffer);
+          OBPairData *intE = new OBPairData();
+          intE->SetAttribute("int energy");
+          intE->SetValue( vs[2]);
+          mol.SetData(intE);
+        }
         if (strstr(buffer, "      TOTAL             =")) 
-        { // Promolden reconstructed energy
+        { // Promolden reconstructed total energy
           tokenize(vs, buffer);
           pmol->SetEnergy(atof(vs[2].c_str()) * HARTREE_TO_KCAL_PER_MOL);
         }

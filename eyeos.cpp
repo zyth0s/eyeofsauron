@@ -74,12 +74,34 @@ void EyeOfSauron::ReadFile(const string infname, string informat)
   if ( obmol.HasData("kinetic energy") ) 
   {
     //OBPairData *kineticE = dynamic_cast<OBPairData *> obmol.GetData("kinetic energy");
-    OBPairData *kineticE = (OBPairData *) obmol.GetData("kinetic energy");
-    cout << "KINETIC: " << kineticE->GetValue() << " Hartree" << endl;
+    OBPairData *kin = (OBPairData *) obmol.GetData("kinetic energy");
+    cout << "KINETIC: " << kin->GetValue() << " Hartree" << endl;
+    //
+    OBPairData *pot = (OBPairData *) obmol.GetData("potential energy");
+    cout << "potential: " << pot->GetValue() << " Hartree" << endl;
+    //
+    OBPairData *nucnuc = (OBPairData *) obmol.GetData("nuc-nuc energy");
+    cout << "nuc-nuc: " << nucnuc->GetValue() << " Hartree" << endl;
+    //
+    OBPairData *nucel = (OBPairData *) obmol.GetData("nuc-el energy");
+    cout << "nuc-el: " << nucel->GetValue() << " Hartree" << endl;
+    //
+    OBPairData *elel = (OBPairData *) obmol.GetData("el-el energy");
+    cout << "el-el: " << elel->GetValue() << " Hartree" << endl;
+    //
+    cout << "TOTAL: " << obmol.GetEnergy() << " Kcal/mol" << endl;
+    //
+    OBPairData *vir = (OBPairData *) obmol.GetData("virial energy");
+    cout << "virial: " << vir->GetValue() << " Hartree" << endl;
+    //
+    OBPairData *net = (OBPairData *) obmol.GetData("net energy");
+    cout << "net: " << net->GetValue() << " Hartree" << endl;
+    //
+    OBPairData *inter = (OBPairData *) obmol.GetData("int energy");
+    cout << "int: " << inter->GetValue() << " Hartree" << endl;
   }
          
   cout << "Number of atoms: " << obmol.NumAtoms() << endl;
-  cout << "Energy: " << obmol.GetEnergy() << " Kcal/mol" << endl;
   //std::cout << "Molecular Weight: " << obmol.GetMolWt() << std::endl;
 }
 
