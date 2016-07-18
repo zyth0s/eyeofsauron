@@ -13,6 +13,7 @@ Requirements:
 ============
 
 * Cmake and (optional; recommended) CCmake.
+* PkgConfig
 * Boost > 1.49.
 * Manually compiled VTK-7.0.0.
   1. Download it. Extract and go into the directory.
@@ -33,6 +34,8 @@ Debian 7-8
 * Cmake: `sudo aptitude/apt-get install cmake`
 * CCmake: `sudo aptitude/apt-get install cmake-ncurses-gui`
 * Boost: `sudo aptitude/apt-get install libboost-dev libboost-python-dev`
+* PkgConfig: `sudo aptitude/apt-get install pkg-config`
+
 
 
 Installation:

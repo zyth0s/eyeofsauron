@@ -29,6 +29,9 @@ they are derived from OBBase, such as OBReaction, OBText.
 
 */
 
+#define HARTREE_TO_KCAL_PER_MOL 627.509469
+
+#include <string>
 #include <openbabel/babelconfig.h>
 #include <openbabel/obmolecformat.h>
 
@@ -269,6 +272,31 @@ bool PMDFormat::ReadMolecule(OBBase* pOb, OBConversion* pConv)
           }
         atom->SetVector(x,y,z); //set coordinates
       }
+
+      while (ifs.getline(buffer,BUFF_SIZE))
+      {
+        
+        if (strstr(buffer, "      KINETIC           =")) 
+        { // Promolden reconstructed kinetic energy
+          tokenize(vs, buffer);
+          OBPairData *kineticE = new OBPairData();
+          kineticE->SetAttribute("kinetic energy");
+          //string tmp = std::to_string(atof(vs[2].c_str()) * HARTREE_TO_KCAL_PER_MOL);
+          kineticE->SetValue( vs[2]);
+          mol.SetData(kineticE);
+        }
+        if (strstr(buffer, "      TOTAL             =")) 
+        { // Promolden reconstructed energy
+          tokenize(vs, buffer);
+          pmol->SetEnergy(atof(vs[2].c_str()) * HARTREE_TO_KCAL_PER_MOL);
+        }
+        if (strstr(buffer, " TotQ=")) 
+        { // Promolden reconstructed charge
+          tokenize(vs, buffer);
+          pmol->SetTotalCharge( atof(vs[1].c_str() ) );
+        }
+      }
+
 
 
     // clean out any remaining blank lines

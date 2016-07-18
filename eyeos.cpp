@@ -69,9 +69,17 @@ void EyeOfSauron::ReadFile(const string infname, string informat)
   if (obmol.HasData(OBGenericDataType::UnitCell))
   {
       OBUnitCell* cell = (OBUnitCell*) obmol.GetData(OBGenericDataType::UnitCell);
-      cout << "Alpha: " << cell->GetAlpha() << endl;
+      cout << "Alpha: " << cell->GetAlpha() << " deg" << endl;
   }
+  if ( obmol.HasData("kinetic energy") ) 
+  {
+    //OBPairData *kineticE = dynamic_cast<OBPairData *> obmol.GetData("kinetic energy");
+    OBPairData *kineticE = (OBPairData *) obmol.GetData("kinetic energy");
+    cout << "KINETIC: " << kineticE->GetValue() << " Hartree" << endl;
+  }
+         
   cout << "Number of atoms: " << obmol.NumAtoms() << endl;
+  cout << "Energy: " << obmol.GetEnergy() << " Kcal/mol" << endl;
   //std::cout << "Molecular Weight: " << obmol.GetMolWt() << std::endl;
 }
 
