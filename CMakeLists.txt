@@ -43,7 +43,7 @@ include_directories(${OPENBABEL2_INCLUDE_DIR})
 ###########################################################################
 # VTK
 ###########################################################################
-option(USE_OpenGL2 "Use OpenGL2 instead of OpenGL" ON)
+option(USE_OpenGL2 "Use OpenGL2 instead of OpenGL" OFF)
 if(USE_OpenGL2)
     # Needs VTK compiled with OpenGL2 (faster)
     set(VTK_RENDERING_BACKEND "OpenGL2") 
