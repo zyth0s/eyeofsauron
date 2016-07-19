@@ -294,9 +294,9 @@ namespace OpenBabel
         
       if (strstr(buffer, "Atomic Contributions for neq:")) 
       { // Promolden reconstructed kinetic energy
+        ifs.getline(buffer,BUFF_SIZE); // Jump undesired lines
         tokenize(vs, buffer);
-        atomid = atoi(vs[4].c_str());
-        // Without symmetry !!!!
+        atomid = atoi(vs[3].c_str());
         // Openbabel starts at 0 and Promolden at 1
         atom = mol.GetAtomById(atomid-1); 
 
@@ -309,7 +309,6 @@ namespace OpenBabel
           continue; // skip
         }
 
-        ifs.getline(buffer,BUFF_SIZE); // Jump undesired lines
         ifs.getline(buffer,BUFF_SIZE); // Jump undesired lines
 
         // Atomic Kinetic energy
