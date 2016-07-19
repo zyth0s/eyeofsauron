@@ -38,14 +38,14 @@ using namespace OpenBabel;
 
 string GetFileExtension(const std::string& FileName)
 {
-    if(FileName.find_last_of(".") != std::string::npos)
-        return FileName.substr(FileName.find_last_of(".")+1);
-    return "";
+  if(FileName.find_last_of(".") != std::string::npos)
+    return FileName.substr(FileName.find_last_of(".")+1);
+  return "";
 }
 
 EyeOfSauron::EyeOfSauron()
 {
-    //cout << "constructed EyeOfSauron class" << endl;
+  //cout << "constructed EyeOfSauron class" << endl;
 
 }
 
@@ -61,7 +61,7 @@ void EyeOfSauron::ReadFile(const string infname, string informat)
 
   OBConversion obconversion;
   if (informat.empty())
-      informat = GetFileExtension(infname);
+    informat = GetFileExtension(infname);
   //cout << informat << endl;
   obconversion.SetInFormat(informat.c_str());
 
@@ -71,8 +71,8 @@ void EyeOfSauron::ShowData()
 {
   if (obmol.HasData(OBGenericDataType::UnitCell))
   {
-      OBUnitCell* cell = (OBUnitCell*) obmol.GetData(OBGenericDataType::UnitCell);
-      cout << "Alpha: " << cell->GetAlpha() << " deg" << endl;
+    OBUnitCell* cell = (OBUnitCell*) obmol.GetData(OBGenericDataType::UnitCell);
+    cout << "Alpha: " << cell->GetAlpha() << " deg" << endl;
   }
   if ( obmol.HasData("kinetic energy") ) 
   {
@@ -102,8 +102,26 @@ void EyeOfSauron::ShowData()
     //
     OBPairData *inter = (OBPairData *) obmol.GetData("int energy");
     cout << "int: " << inter->GetValue() << " Hartree" << endl;
+
+    FOR_ATOMS_OF_MOL(atom,obmol)
+    {
+      cout << "Atom" << endl;
+      OBPairData *kinat = (OBPairData *) atom->GetData("kinetic energy");
+      cout << "atomic kinetic: " << kinat->GetValue() << " Hartree" << endl;
+      OBPairData *potat = (OBPairData *) atom->GetData("potential energy");
+      cout << "atomic potential: " << potat->GetValue() << " Hartree" << endl;
+      OBPairData *elrepat = (OBPairData *) atom->GetData("electron repulsion");
+      cout << "atomic electron repulsion: " << elrepat->GetValue() << " Hartree" << endl;
+      OBPairData *coulelrepat = (OBPairData *) atom->GetData("electron coulomb repulsion");
+      cout << "atomic electron coulomb repulsion: " << coulelrepat->GetValue() << " Hartree" << endl;
+      OBPairData *xcelrepat = (OBPairData *) atom->GetData("electron xc repulsion");
+      cout << "atomic electron xc repulsion: " << xcelrepat->GetValue() << " Hartree" << endl;
+      OBPairData *selfelrepat = (OBPairData *) atom->GetData("electron self repulsion");
+      cout << "atomic electron self repulsion: " << selfelrepat->GetValue() << " Hartree" << endl;
+    }
   }
-         
+
+
   cout << "Number of atoms: " << obmol.NumAtoms() << endl;
   //std::cout << "Molecular Weight: " << obmol.GetMolWt() << std::endl;
 }
@@ -128,9 +146,9 @@ void EyeOfSauron::SeeAll()
 }
 
 /*
-EyeOfSauron::~EyeOfSauron()
-{
-    cout << "destructed EyeOfSauron class" << endl;
+   EyeOfSauron::~EyeOfSauron()
+   {
+   cout << "destructed EyeOfSauron class" << endl;
 
-}
-*/
+   }
+   */
