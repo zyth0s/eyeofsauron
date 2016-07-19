@@ -33,11 +33,15 @@ Debian 7-8
 -----------
 
 * Cmake: `sudo apt-get install cmake`
-* CCmake: `sudo apt-get install cmake-ncurses-gui`
+* CCmake: `sudo apt-get install cmake-curses-gui`
 * Boost: `sudo apt-get install libboost-dev libboost-python-dev`
 * PkgConfig: `sudo apt-get install pkg-config`
 * libxt-dev: `sudo apt-get install libxt-dev`
 
+Development
+-----------
+
+* cppcheck: `sudo apt-get install cppcheck`
 
 
 Installation:

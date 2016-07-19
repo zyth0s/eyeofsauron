@@ -66,6 +66,9 @@ void EyeOfSauron::ReadFile(const string infname, string informat)
   obconversion.SetInFormat(informat.c_str());
 
   obconversion.ReadFile(&obmol,infname);
+}
+void EyeOfSauron::ShowData()
+{
   if (obmol.HasData(OBGenericDataType::UnitCell))
   {
       OBUnitCell* cell = (OBUnitCell*) obmol.GetData(OBGenericDataType::UnitCell);
