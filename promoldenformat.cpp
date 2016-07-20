@@ -282,6 +282,12 @@ namespace OpenBabel
     vector<OBPairData*> coul_elRepAtE;
     vector<OBPairData*> xc_elRepAtE;
     vector<OBPairData*> selfelRepAtE;
+    vector<OBPairData*> elOwnNucAtE; // attraction
+    vector<OBPairData*> netAtE; 
+    vector<OBPairData*> intAtE; // interaction
+    vector<OBPairData*> addAtE; // additive
+    vector<OBPairData*> effAtE; // effective
+    vector<OBPairData*> virialAtE; // effective
     OBAtom* atom = new OBAtom();
     while (ifs.getline(buffer,BUFF_SIZE))
     {
@@ -353,9 +359,51 @@ namespace OpenBabel
         selfelRepAtE[atomid-1]->SetAttribute("electron self repulsion");
         selfelRepAtE[atomid-1]->SetValue( vs[2]);
         atom->SetData(selfelRepAtE[atomid-1]);
+        // Atomic Electron -- Own nucleus attraction
+        ifs.getline(buffer,BUFF_SIZE); // Next line
+        tokenize(vs, buffer);
+        elOwnNucAtE.push_back( new OBPairData);
+        elOwnNucAtE[atomid-1]->SetAttribute("electron own-nuc attraction");
+        elOwnNucAtE[atomid-1]->SetValue( vs[3]);
+        atom->SetData(elOwnNucAtE[atomid-1]);
+        // Atomic Net Energy
+        ifs.getline(buffer,BUFF_SIZE); // Next line
+        tokenize(vs, buffer);
+        netAtE.push_back( new OBPairData);
+        netAtE[atomid-1]->SetAttribute("net energy");
+        netAtE[atomid-1]->SetValue( vs[3]);
+        atom->SetData(netAtE[atomid-1]);
+        // Atomic Interaction Energy
+        ifs.getline(buffer,BUFF_SIZE); // Next line
+        tokenize(vs, buffer);
+        intAtE.push_back( new OBPairData);
+        intAtE[atomid-1]->SetAttribute("interaction energy");
+        intAtE[atomid-1]->SetValue( vs[3]);
+        atom->SetData(intAtE[atomid-1]);
+        // Atomic Additive Energy
+        ifs.getline(buffer,BUFF_SIZE); // Next line
+        tokenize(vs, buffer);
+        addAtE.push_back( new OBPairData);
+        addAtE[atomid-1]->SetAttribute("additive energy");
+        addAtE[atomid-1]->SetValue( vs[3]);
+        atom->SetData(addAtE[atomid-1]);
+        // Atomic Effective Energy
+        ifs.getline(buffer,BUFF_SIZE); // Next line
+        tokenize(vs, buffer);
+        effAtE.push_back( new OBPairData);
+        effAtE[atomid-1]->SetAttribute("effective energy");
+        effAtE[atomid-1]->SetValue( vs[3]);
+        atom->SetData(effAtE[atomid-1]);
+        // Atomic Virial (2T+V) Energy
+        ifs.getline(buffer,BUFF_SIZE); // Next line
+        tokenize(vs, buffer);
+        virialAtE.push_back( new OBPairData);
+        virialAtE[atomid-1]->SetAttribute("virial energy");
+        virialAtE[atomid-1]->SetValue( vs[2]);
+        atom->SetData(virialAtE[atomid-1]);
         //
         //delete tmpair;
-        atomid = 99999;
+        atomid = 99999; // avoid the use of prev parsed values.
         //delete atomicid;
       }
 

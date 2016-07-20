@@ -118,6 +118,18 @@ void EyeOfSauron::ShowData()
       cout << "atomic electron xc repulsion: " << xcelrepat->GetValue() << " Hartree" << endl;
       OBPairData *selfelrepat = (OBPairData *) atom->GetData("electron self repulsion");
       cout << "atomic electron self repulsion: " << selfelrepat->GetValue() << " Hartree" << endl;
+      OBPairData *ownattrat = (OBPairData *) atom->GetData("electron own-nuc attraction");
+      cout << "atomic electron own-nuc attraction: " << ownattrat->GetValue() << " Hartree" << endl;
+      OBPairData *netat = (OBPairData *) atom->GetData("net energy");
+      cout << "atomic net energy: " << netat->GetValue() << " Hartree" << endl;
+      OBPairData *intat = (OBPairData *) atom->GetData("interaction energy");
+      cout << "atomic interaction energy: " << intat->GetValue() << " Hartree" << endl;
+      OBPairData *addat = (OBPairData *) atom->GetData("additive energy");
+      cout << "atomic additive energy: " << addat->GetValue() << " Hartree" << endl;
+      OBPairData *effat = (OBPairData *) atom->GetData("effective energy");
+      cout << "atomic effective energy: " << effat->GetValue() << " Hartree" << endl;
+      OBPairData *virialat = (OBPairData *) atom->GetData("virial energy");
+      cout << "atomic virial energy: " << virialat->GetValue() << " Hartree" << endl;
     }
   }
 
