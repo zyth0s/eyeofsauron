@@ -216,21 +216,28 @@ void Representation::SurfRepresentation(const std::string infname, const int atn
       ifs >> costh >> sinth >> cosph >> sinph;
       ifs >> tmp; //ifs.ignore(); discard theta weight
       ifs >> r;
-      if (fabs(r-rmaxsurf)<eps) // Discard rmax values
-          continue;
-      else i++;                 // keep i indices.
+      //if (fabs(r-rmaxsurf)<eps) // Discard rmax values
+      //    continue;
+      //else i++;                 // keep i indices.
+      i++;
       getline(ifs,line);        // get the rest of line
       //cout << i << " " << costh << " " << sinth << " " 
       //                 << cosph << " " << sinph << " " << r << endl;
       // Spherical to cartesian
-      x[0] = r * sinth * cosph * BOHR_TO_ANGSTROM;
-      x[1] = r * sinth * sinph * BOHR_TO_ANGSTROM;
-      x[2] = r * costh         * BOHR_TO_ANGSTROM;
+      x[0] = r * sinth * cosph ;
+      x[1] = r * sinth * sinph ;
+      x[2] = r * costh         ;
       //cout  << xcenter[0] << " " << xcenter[1] << " " << xcenter[2] << endl;
-      x[0] = x[0] + xcenter[0]; // Center around the nuclei
-      x[1] = x[1] + xcenter[1];
-      x[2] = x[2] + xcenter[2];
-      //cout  << x[0] << " " << x[1] << " " << x[2] << endl;
+      x[0] += xcenter[0] ; // Center around the nuclei
+      x[1] += xcenter[1] ;
+      x[2] += xcenter[2] ;
+      if ((fabs(x[0]) < eps) && (fabs(x[1]) < eps) && (fabs(x[2]) < eps) ) 
+      { // discard very small values
+        cout << "Close to zero" << endl;
+        cout << x[0] << " " << x[1] << " " << x[2] << endl;
+        --i;
+        continue;
+      }
       points->InsertPoint(i,x[0],x[1],x[2]); 
   }
 
@@ -254,7 +261,7 @@ void Representation::SurfRepresentation(const std::string infname, const int atn
 
   vtkNew<vtkActor> triangulation;
   triangulation->SetMapper(surfmap.GetPointer());
-  triangulation->GetProperty()->SetOpacity(0.5);
+  triangulation->GetProperty()->SetOpacity(1.0);
   //triangulation->GetProperty()->SetRepresentationToWireframe();
   float rgb[3];
   vtkNew<vtkPeriodicTable> eltable;
